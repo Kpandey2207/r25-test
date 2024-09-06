@@ -1,3 +1,6 @@
+#ifndef SERIAL_H
+#define SERIAL_H
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -17,3 +20,4 @@ void write_to_SB(FILE* fd, char* fmt, ...);
 // Function to close the serial port
 void close_file(FILE* fd);
 
+#endif // SERIAL_H

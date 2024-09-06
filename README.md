@@ -46,13 +46,34 @@ If you are able to compile your code successfully you should see something like 
 ## Understanding
 Describe what you understood about the problem.
 
+The goal is to:
+ 1. Read and parse the RC channel data from the SBUS receiver.
+ 2. Interpolate the received channel values into PWM values compatible with the Sabertooth motor driver.
+ 3. Send the interpolated values to the Sabertooth motor driver to control the movement of the rover.
+
+The RC transmitter is configured in extended limits, which means the channel values will range between approximately 172 to 1811. You need to map these values to a PWM range the Sabertooth can interpret, where 0 is full reverse, 64 is neutral, and 127 is full forward.
+
 ## Thought Process
 After understanding the problem, describe how you decided to proceed towards solving the question.
+
+Approach to Solve the Problem:
+1. Reading Data from the SBUS Receiver
+2. Parsing the SBUS Packet
+3. Interpolating the Channel Values
+4. Sending PWM Data to the Sabertooth Motor Driver
+5. Serial Communication Management
 
 ## Implementation
 How did you decide to implement your solution.
 
+The SBUS receiver sends a 25-byte packet containing 16 control channels, each encoded in 11 bits. The first step is to open a serial communication port to read this data. You will use the fopen function to access the SBUS serial port and fread to capture the 25-byte SBUS packet. Then data is then passed into a parsing function to extract individual channel values from the packet.
+
 Mention the details, such as the scaling used in the interpolation and how you tested it.
+
+The motor driver (Sabertooth) accepts a PWM value between 0 and 127. The value 0 corresponds to full reverse, 64 is neutral (motor stops), and 127 is full forward. The challenge here is to map (interpolate) the SBUS channel values from the 172–1811 range into the 0–127 PWM range that the Sabertooth expects. 
+The interpolation can be done using a linear mapping function:
+pwm = (channel_value - RC_MIN) * (PWM_MAX - PWM_MIN) / (RC_MAX - RC_MIN) + PWM_MIN;
+
 
 # Google Form
 [Link to Repo Submission](https://docs.google.com/forms/d/e/1FAIpQLSeKVbm2dqWxwA5lbEkRfzY8KF619mI5ibGs0Cm2e5wrb0hoWQ/viewform)
